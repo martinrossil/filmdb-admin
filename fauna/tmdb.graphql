@@ -1,0 +1,38 @@
+type Movie {
+    adult: Boolean!
+    id: Int! @unique
+    title: String!
+    budget: Int!
+    original_language: String!
+    original_title: String!
+    overview: String
+    popularity: Float!
+    release_date: Date!
+    revenue: Int!
+    runtime: Int
+    status: String!
+    vote_average: Float!
+    vote_count: Int!
+    genres: [Genre!] @relation
+    production_countries: [Country!] @relation
+}
+
+type Genre {
+    id: Int! @unique
+    movies: [Movie!] @relation
+    name: String! @unique
+}
+
+type Query {
+    getMovieWithHighestId: Movie @resolver
+    getCountryByIso(iso_3166_1: String!): Country @resolver
+    movies: [Movie!]!
+    genres: [Genre!]!
+    countries: [Country!]!
+}
+
+type Country {
+    iso_3166_1: String! @unique
+    name: String! @unique
+    movies: [Movie!] @relation
+}

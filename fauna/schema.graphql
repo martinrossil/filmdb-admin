@@ -1,0 +1,66 @@
+type Movie {
+    #adult: Boolean!
+    #backdrop_path: String
+    #budget: Int!
+    cast: [Cast!] @relation
+    genres: [Genre!] @relation
+    id: Int! @unique
+    #imdb_id: String
+    #original_language: String!
+    #original_title: String!
+    #overview: String
+    #popularity: Float!
+    #poster_path: String
+    #release_date: Date!
+    #revenue: Int!
+    #runtime: Int
+    #status: String!
+    #tagline: String
+    title: String!
+    #vote_average: Float!
+    #vote_count: Int!
+}
+
+type Genre {
+    id: Int! @unique
+    movies: [Movie!] @relation
+    name: String! @unique
+}
+
+type Person {
+    adult: Boolean!
+    biography: String!
+    birthday: Date
+    cast: [Cast!] @relation
+    deathday: Date
+    gender: Int!
+    id: Int! @unique
+    imdb_id: String!
+    known_for_department: String!
+    name: String!
+    place_of_birth: String
+    popularity: Float!
+    profile_path: String
+}
+
+type Cast {
+    character: String!
+    credit_id: String! @unique
+    order: Int!
+    person: Person!
+    movie: Movie!
+}
+
+type Query {
+    movies: [Movie!]!
+    getMovieWithHighestId: Movie @resolver
+}
+
+input MovieWithIdInput {
+    id: Int! @unique
+    title: String!
+}
+
+type Mutation {
+    createMovieWithId(id: ID!, data: MovieWithIdInput!): Movie @resolver
+}
