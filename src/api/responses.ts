@@ -6,4 +6,11 @@ export type GetMovieWithHighestIdResponse = {
         getMovieWithHighestId: MovieType
     },
     errors: Array<FaunaErrorType> | null
-}
+};
+
+export type CreateMovieResponse = {
+    data: {
+        createMovie: MovieType
+    },
+    errors: Array<FaunaErrorType> | null
+};
