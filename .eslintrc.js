@@ -25,6 +25,8 @@ module.exports = {
         'no-unused-vars': 'off',
         'space-before-function-paren': 'off',
         'dot-notation': 'off',
-        'no-new': 'off'
+        'no-new': 'off',
+        '@typescript-eslint/ban-ts-comment': 'off',
+        camelcase: 'off'
     }
 }
