@@ -5,6 +5,14 @@ export function catchError(error: unknown): [null, Error] {
     return [null, new Error('Error')];
 }
 
+export function get404ErrorTuple(type: string): [null, Error] {
+    return [null, new Error(type + ' does not exist.')];
+}
+
+export function getUnknownErrorTuple(): [null, Error] {
+    return [null, new Error('Unknown Error')];
+}
+
 export type FaunaErrorType = {
     extensions: {
         code: string
