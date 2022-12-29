@@ -1,68 +1,19 @@
 import { Application } from 'fuix';
-import { createMovie, getMovieWithHighestId } from './api/graphql';
-import { getMovie, getPerson } from './api/tmdb';
-import { FAUNA_SECRET_FILMDB } from './Config';
+import FilmDBLogic from './logic/FilmDBLogic';
+import UpdateLogic from './logic/UpdateLogic';
+import Colors from './ui/Colors';
+import ScrabePage from './ui/pages/ScrabePage';
+import UpdatePage from './ui/pages/UpdatePage';
+import TopBar from './ui/TopBar';
 export default class FilmDBAdmin extends Application {
     public constructor() {
         super();
         this.style.height = '100vh';
-        this.bodyBackgroundColor = '#000d1a';
-        this.addEventListener('click', this.start);
-    }
-
-    private currentIndex = NaN;
-
-    private async start(): Promise<void> {
-        this.loadMovieFromTMDB(13);
-        /* const [movie, error] = await getMovieWithHighestId();
-        if (movie) {
-            const nextId = movie.id + 1;
-            if (nextId < 25) {
-                this.loadMovieFromTMDB(movie.id + 1);
-            } else {
-                console.log('DONE!!');
-            }
-        } else {
-            if (error instanceof TypeError) {
-                console.log('Network error.');
-            } else {
-                this.loadMovieFromTMDB(0);
-            }
-        } */
-    }
-
-    private async loadMovieFromTMDB(id: number): Promise<void> {
-        console.log('loadMovieFromTMDB(' + id + ')');
-        const [movie, error] = await getMovie(id);
-        if (movie) {
-            const [created, error] = await createMovie(movie);
-            console.log(created, error);
-            if (error) {
-                console.log(error);
-                // return;
-            }
-            // return;
-            /* const nextId = movie.id + 1;
-            if (nextId < 25) {
-                this.loadMovieFromTMDB(nextId);
-            } else {
-                console.log('DONE!!');
-            } */
-        } else {
-            console.log(error);
-            // this.loadMovieFromTMDB(id + 1);
-        }
-    }
-
-    private async loadPersonFromTMDB(id: number): Promise<void> {
-        console.log('loadPersonFromTMDB(' + id + ')');
-        const [person, error] = await getPerson(id);
-        if (person) {
-            console.log(person);
-            // create person in fauna
-        } else {
-            console.log(error);
-        }
+        this.bodyBackgroundColor = Colors.NEUTRAL_100;
+        this.bodyFontFamily = 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"';
+        this.addComponents([new ScrabePage(), new TopBar()]);
+        new FilmDBLogic(this);
+        // new UpdateLogic(this);
     }
 }
 customElements.define('film-db-admin', FilmDBAdmin);
