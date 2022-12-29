@@ -1,0 +1,22 @@
+type Movie {
+    title: String!
+    genres: [Genre!] @relation
+}
+
+type Genre {
+    movies: [Movie!] @relation
+    name: String! @unique
+}
+
+type Query {
+    movies: [Movie!]!
+}
+
+input MovieInput {
+    id: Int! @unique
+    title: String!
+}
+
+type Mutation {
+    createMovieWithID(data: MovieInput!): Movie @resolver
+}
