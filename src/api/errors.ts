@@ -1,31 +1,40 @@
-export function catchError(error: unknown): [null, Error] {
+import { DatabaseError } from '@planetscale/database/dist';
+
+export function catchError(error: unknown): FilmDBError {
     if (error instanceof TypeError) {
-        return [null, error];
+        if (error.message === 'Failed to fetch') {
+            return new FilmDBError(FilmDBError.NETWORK_ERROR, error.message);
+        }
+        return new FilmDBError(FilmDBError.FATAL_ERROR, error.message);
+    } else if (error instanceof DatabaseError) {
+        if (error.body.code === 'ALREADY_EXISTS' || error.body.message.includes('Duplicate entry')) {
+            return new FilmDBError(FilmDBError.DUPLICATE_ENTRY, error.name);
+        }
+        return new FilmDBError(FilmDBError.DATABASE_ERROR, error.body.code);
+    } else if (error instanceof Error) {
+        return new FilmDBError(FilmDBError.UNKNOWN_ERROR, error.message);
     }
-    return [null, new Error('Error')];
+    return new FilmDBError(FilmDBError.UNKNOWN_ERROR, 'Unknown Error');
 }
 
-export function get404ErrorTuple(type: string): [null, Error] {
-    return [null, new Error(type + ' does not exist.')];
-}
-
-export function getUnknownErrorTuple(): [null, Error] {
-    return [null, new Error('Unknown Error')];
-}
-
-export type FaunaErrorType = {
-    extensions: {
-        code: string
-    },
+export type FilmDBErrorType = {
+    code: number,
     message: string
 }
 
-export class FaunaError extends Error {
-    public constructor(init: FaunaErrorType) {
-        super(init.message);
-    }
-}
+export class FilmDBError extends Error {
+    public static NETWORK_ERROR = 0;
+    public static FATAL_ERROR = 1;
+    public static DUPLICATE_ENTRY = 2;
+    public static MOVIE_DOESNT_EXIST = 3;
+    public static UNKNOWN_ERROR = 4;
+    public static PERSON_DOESNT_EXIST = 5;
+    public static DATABASE_ERROR = 6;
 
-export function getFaunaError(init: FaunaErrorType): FaunaError {
-    return new FaunaError(init);
+    public code: number;
+
+    public constructor(code: number, message: string) {
+        super(message)
+        this.code = code;
+    }
 }
