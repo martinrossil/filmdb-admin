@@ -27,6 +27,7 @@ module.exports = {
         'dot-notation': 'off',
         'no-new': 'off',
         '@typescript-eslint/ban-ts-comment': 'off',
+        'prefer-regex-literals': 'off',
         camelcase: 'off'
     }
 }
